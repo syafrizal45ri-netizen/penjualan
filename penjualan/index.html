@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katalog Toko Keren - Belanja Mudah</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            /* Background gradasi estetis dan menarik */
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
+            background-attachment: fixed;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        /* Navigasi */
+        header {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 8%;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(to right, #60a5fa, #f43f5e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .cart-box {
+            position: relative;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .cart-box:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        #cart-count {
+            background: #f43f5e;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 50%;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .hero h1 {
+            font-size: 42px;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: #cbd5e1;
+            max-width: 600px;
+            margin: 0 auto 30px auto;
+        }
+
+        /* Grid Produk */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 4% 80px 4%;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        /* Kartu Produk dengan Efek Glassmorphism */
+        .product-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+            backdrop-filter: blur(5px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(244, 63, 94, 0.2);
+            border-color: rgba(244, 63, 94, 0.4);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .product-info {
+            padding: 20px;
+        }
+
+        .product-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .product-price {
+            font-size: 20px;
+            color: #38bdf8;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .btn-add {
+            width: 100%;
+            background: linear-gradient(to right, #3b82f6, #1d4ed8);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-add:hover {
+            background: linear-gradient(to right, #2563eb, #1e40af);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.3);
+            font-size: 14px;
+            color: #94a3b8;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="navbar">
+            <div class="logo">MajuJaya Store</div>
+            <div class="cart-box" onclick="cekKeranjang()">
+                🛒 Keranjang <span id="cart-count">0</span>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1>Koleksi Premium Terbaik</h1>
+        <p>Temukan produk-produk pilihan berkualitas tinggi dengan harga terbaik khusus untuk Anda.</p>
+    </section>
+
+    <main class="container">
+        <div id="product-list" class="product-grid">
+
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 MajuJaya Store. Hak Cipta Dilindungi.</p>
+    </footer>
+
+    <script>
+        let totalItem = 0;
+        let listBelanja = [];
+
+        function tambahKeKeranjang(namaProduk) {
+            totalItem++;
+            listBelanja.push(namaProduk);
+            document.getElementById('cart-count').innerText = totalItem;
+            alert(namaProduk + " berhasil dimasukkan ke keranjang!");
+        }
+
+        function cekKeranjang() {
+            if (listBelanja.length === 0) {
+                alert("Keranjang belanja Anda masih kosong.");
+            } else {
+                alert("Barang di keranjang Anda:\n" + listBelanja.join("\n"));
+            }
+        }
+
+        // Fungsi baru untuk mengambil data dari Database melalui Cloudflare Functions
+        async function muatProduk() {
+            const container = document.getElementById('product-list');
+            container.innerHTML = '<p>Memuat produk dari database...</p>';
+
+            try {
+                // Memanggil endpoint API yang kita buat di functions/api/products.js
+                const response = await fetch('/api/products');
+                const products = await response.json();
+
+                container.innerHTML = ''; // Bersihkan tulisan loading
+
+                // Render setiap produk ke dalam HTML
+                products.forEach(produk => {
+                    // Format angka ke Rupiah
+                    const hargaRupiah = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(produk.price);
+                    
+                    container.innerHTML += `
+                        <div class="product-card">
+                            <img src="${produk.image_url}" alt="${produk.name}" class="product-image">
+                            <div class="product-info">
+                                <div class="product-title">${produk.name}</div>
+                                <div class="product-price">${hargaRupiah}</div>
+                                <button class="btn-add" onclick="tambahKeKeranjang('${produk.name}')">Beli Sekarang</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (error) {
+                container.innerHTML = '<p style="color:red;">Gagal memuat data dari server.</p>';
+                console.error(error);
+            }
+        }
+
+        // Jalankan fungsi saat halaman web pertama kali dibuka
+        window.onload = muatProduk;
+    </script>
+</body>
+</html>
